@@ -38,15 +38,38 @@ fi
    
 cp ${SRCFILE} flac/${BASENAME}.flac
 
+TMPSTEREO=/tmp/$$_trimmed.wav
+sox ${SRCFILE} ${TMPSTEREO} silence 1 1 0.01% reverse silence 1 1 0.01% reverse
+if [ $? -ne 0 ]; then
+    echo "Error executing sox" 1>&2
+    rm -f ${TMPSTEREO}
+    exit 1
+fi
+
+TMPMONO=/tmp/$$_mono.wav
+sox ${TMPSTEREO} ${TMPMONO} channels 1
+if [ $? -ne 0 ]; then
+    echo "Error executing sox" 1>&2
+    rm -f ${TMPSTEREO} ${TMPMONO}
+    exit 1
+fi
 
 for rate in 16000 32000 48000 8000; do
-    sox ${SRCFILE} -b 16 stereo/${rate}/${BASENAME}.wav rate ${rate}
-    sox ${SRCFILE} -b 16 mono/${rate}/${BASENAME}.wav channels 1 rate ${rate}
+    sox ${TMPSTEREO} -b 16 stereo/${rate}/${BASENAME}.wav rate ${rate}
     if [ $? -ne 0 ]; then
         echo "Error executing sox" 1>&2
+        rm -f ${TMPSTEREO} ${TMPMONO} 
+        exit 1
+    fi
+    sox ${TMPMONO} -b 16 mono/${rate}/${BASENAME}.wav rate ${rate}
+    if [ $? -ne 0 ]; then
+        echo "Error executing sox" 1>&2
+        rm -f ${TMPSTEREO} ${TMPMONO} 
         exit 1
     fi
 done
+
+rm -f ${TMPSTEREO} ${TMPMONO}
 
 echo Added ${BASENAME}
 

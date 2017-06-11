@@ -1,15 +1,16 @@
 DZWIN
 =====
 
-This is a set of audio files that can be used for all kinds of
+This is a collection of audio files that can be used for all kinds of
 notifications, for example, in telephony systems.
 
 Subdirectories:
 
 * flac: source files in maximum available resolution;
 
-* mono, stereo: 16-bit WAV files in 8, 16, 32, and 48 kHz sample rate,
-  with one or two channels, correspondingly
+* mono, stereo: 16-bit PCM WAV files in 8, 16, 32, and 48 kHz sample
+  rate, with one or two channels, correspondingly. Silence is trimmed
+  from the beginning and from the end of each recording.
 
 
 
