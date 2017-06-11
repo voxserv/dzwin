@@ -1,0 +1,54 @@
+#!/bin/sh
+
+SRCFILE=$1
+
+if [ x${SRCFILE} = x ]; then
+    echo "Usage: $0 SRCFILE.flac" 1>&2
+    exit 1
+fi
+
+if [ ! -r ${SRCFILE} ]; then
+    echo "Cannot read $SRCFILE" 1>&2
+    exit 1
+fi
+    
+for dir in flac mono stereo; do
+    if [ ! -d ${dir} ]; then
+        echo "Missing directory: ${dir}" 1>&2
+        exit 1
+    fi
+done
+
+for format in mono stereo; do
+    for dir in 16000 32000 48000 8000; do
+        if [ ! -d ${format}/${dir} ]; then
+            echo "Missing directory: ${format}/${dir}" 1>&2
+            exit 1
+        fi
+    done
+done
+
+BASENAME=`openssl md5 -r ${SRCFILE} | sed -e 's,^\(......\).*,\1,'`
+
+if [ -e flac/${BASENAME}.flac ]; then
+    echo "File ${BASENAME} already exists" 1>&2
+    exit 1
+fi
+    
+   
+cp ${SRCFILE} flac/${BASENAME}.flac
+
+
+for rate in 16000 32000 48000 8000; do
+    sox ${SRCFILE} -b 16 stereo/${rate}/${BASENAME}.wav rate ${rate}
+    sox ${SRCFILE} -b 16 mono/${rate}/${BASENAME}.wav channels 1 rate ${rate}
+    if [ $? -ne 0 ]; then
+        echo "Error executing sox" 1>&2
+        exit 1
+    fi
+done
+
+echo Added ${BASENAME}
+
+
+

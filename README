@@ -1,0 +1,20 @@
+DZWIN
+=====
+
+This is a set of audio files that can be used for all kinds of
+notifications, for example, in telephony systems.
+
+Subdirectories:
+
+* flac: source files in maximum available resolution;
+
+* mono, stereo: 16-bit WAV files in 8, 16, 32, and 48 kHz sample rate,
+  with one or two channels, correspondingly
+
+
+
+Sounds (c) 2017 Dopeless Design http://www.dopeless-design.de
+Scripts (c) 2017 K-Open GmbH http://www.k-open.com/
+
+These files are distributed under Creative Commons
+Attribution-ShareAlike 4.0 International Public License.
